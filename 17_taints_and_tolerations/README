@@ -1,0 +1,63 @@
+- kubectl get nodes
+- kubectl describe node <Node-Name>| grep -i taint
+
+- kubectl taint nodes k8sworker1 company=thinknyx:NoSchedule
+
+- kubectl describe node k8sworker1  | grep -i taint
+Taints:             company=thinknyx:NoSchedule
+
+CASE1: Now create a deployment with 3 replicas and you will see the POD will not get created on this node as the POD is not having tolerations set
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yogeshappdep
+  labels:
+    app: yogeshapp
+spec:
+  template:
+    metadata:
+      name: yogeshapp-pod
+      labels:
+        app: yogeshapp
+    spec:
+      containers:
+      - name: devopsinaction
+        image: yogeshraheja/devopsinaction:v1
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: yogeshapp
+
+
+CASE2: Now add tolerations and you will see the pods are getting created on TAINTED node also along with other nodes:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yogeshappdepagain
+  labels:
+    app: yogeshappagain
+spec:
+  template:
+    metadata:
+      name: yogeshappagain-pod
+      labels:
+        app: yogeshappagain
+    spec:
+      containers:
+      - name: devopsinaction
+        image: yogeshraheja/devopsinaction:v1
+      tolerations:
+        - key: company
+          value: thinknyx
+          operator: Equal
+          effect: NoSchedule
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: yogeshappagain
+

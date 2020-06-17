@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yogeshappdep
+  labels:
+    app: yogeshapp
+spec:
+  template:
+    metadata:
+      name: yogeshapp-pod
+      labels:
+        app: yogeshapp
+    spec:
+      containers:
+      - name: devopsinaction
+        image: yogeshraheja/devopsinaction:v1
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: yogeshapp

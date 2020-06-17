@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: yogeshapp
+  labels:
+    app: yogeshapp
+spec:
+  containers:
+  - name: devopsinaction
+    image: yogeshraheja/devopsinaction:v1
+

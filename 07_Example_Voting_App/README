@@ -1,0 +1,12 @@
+- Install Git
+
+- git clone https://github.com/yogeshraheja/KubernetesVotingApp.git
+
+- kubectl apply -f .
+
+- kubectl get ns
+- kubectl get deployment in NS
+- kubectl get rs in NS
+- kubectl get pods in NS
+- kubectl get svc in NS
+- Go to browser for Vote and Result Frontend

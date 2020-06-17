@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commanddep
+  labels:
+    app: myapp
+spec:
+  template:
+    metadata:
+      name: commanddeppod
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: commanddeppod
+        image: ubuntu:18.04
+        command:
+          - "sleep"
+          - "3600"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp

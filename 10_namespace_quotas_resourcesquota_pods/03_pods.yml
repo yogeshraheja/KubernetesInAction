@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quotapod
+  namespace: quotans
+spec:
+  containers:
+  - name: quotapod
+    image: httpd
+    resources:
+      limits:
+        memory: "800Mi"
+        cpu: "800m" 
+      requests:
+        memory: "600Mi"
+        cpu: "400m"

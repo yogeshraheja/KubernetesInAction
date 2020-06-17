@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yogeshdep
+  labels:
+    app: thinknyxapp
+spec:
+  template:
+    metadata:
+      name: yogeshdep-pod
+      labels:
+        app: thinknyxapp
+    spec:
+      containers:
+      - name: yogeshdeppod
+        image: yogeshraheja/devopsinaction:v1
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: thinknyxapp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yogeshdepsvc
+
+spec:
+  type: NodePort
+  ports:
+  - targetPort: 80
+    port: 80
+    nodePort: 30010
+  selector:
+    app: thinknyxapp
+

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: quotatest
+  namespace: yogeshtest
+spec:
+  hard:
+    pods: "1"

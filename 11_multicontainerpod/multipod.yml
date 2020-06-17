@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multicontainer
+  labels:
+    run: multicontainer
+spec:
+  containers:
+  - image: nginx
+    name: nginxcon
+  - image: redis
+    name: rediscon
+  - image: memcached
+    name: memcachedcon

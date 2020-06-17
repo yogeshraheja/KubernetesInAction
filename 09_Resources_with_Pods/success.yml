@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stressdemo
+spec:
+  containers:
+  - name: stressdemo
+    image: yogeshraheja/devopsinaction:v1
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "200Mi"

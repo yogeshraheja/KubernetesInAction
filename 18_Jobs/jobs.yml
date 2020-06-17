@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jobtest
+spec:
+  template:
+    metadata:
+      name: jobtest
+    spec:
+      containers:
+      - name: multiplytest
+        image: centos:7
+        command: ['expr', '10', '*', '20']
+      restartPolicy: Never

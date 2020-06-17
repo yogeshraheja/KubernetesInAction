@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      run: webapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: yogeshraheja/thinknyxvote:v2
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webappsvc
+  labels:
+    run: webapp
+spec:
+  ports:
+  - port: 80
+  selector:
+    run: webapp

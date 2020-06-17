@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjobtest
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: crontest
+            image: centos:7
+            args:
+            - "sh"
+            - "-c"
+            - "date; uptime; echo Hello from the Yogesh Raheja"
+          restartPolicy: Never
+
+

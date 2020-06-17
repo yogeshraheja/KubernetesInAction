@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testinit
+spec:
+  containers:
+  - image: yogeshraheja/devopsinaction:v1
+    name: testinit
+  initContainers:
+    - name: myinit
+      image: busybox
+      command:
+      - "sleep"
+      - "30"

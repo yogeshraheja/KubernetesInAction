@@ -1,0 +1,9 @@
+CASE1:
+======
+
+Run NS, Quota and First Pod file
+
+Case2:
+=====
+
+Run new pod and you will see quota errors

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yogeshappdepagain
+  labels:
+    app: yogeshappagain
+spec:
+  template:
+    metadata:
+      name: yogeshappagain-pod
+      labels:
+        app: yogeshappagain
+    spec:
+      containers:
+      - name: devopsinaction
+        image: yogeshraheja/devopsinaction:v1
+      tolerations:
+        - key: company
+          value: thinknyx
+          operator: Equal
+          effect: NoSchedule
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: yogeshappagain

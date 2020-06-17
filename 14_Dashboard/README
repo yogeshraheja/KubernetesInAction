@@ -1,0 +1,13 @@
+- Install GIT
+
+- git clone https://github.com/thinknyx-technologies-llp/k8s-dashboard.git
+
+- kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+
+- USE MOZILLA and access the dashboard
+
+- Show one deployment from there, scale up and down a pod 
+
+- Do one deployment from CLI and show the same comes on dashboard 
+
+

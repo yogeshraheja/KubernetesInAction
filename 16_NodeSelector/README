@@ -1,0 +1,58 @@
+Node Labels:
+------------
+You can also use labels to tag nodes
+
+Once nodes are tagged, you can use label selectors to let pods only run specific nodes
+
+there are two steps required to run a pod on a specific set of nodes
+
+- first you tag the node
+- then you add a nodeSelector to your pod configuration 
+====================
+
+
+kubectl get nodes
+kubectl get nodes --show-labels
+
+Run the below yaml file and check the pod status you will find the error stating "node(s) didn't match node selector."
+
+kubectl create -f <yamlfile>
+
+kubectl get pods
+
+kubectl describe pod <pod-name>
+
+ERROR will be like:
+===================
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  11s (x2 over 11s)  default-scheduler  0/3 nodes are available: 3 node(s) didn't match node selector.
+
+
+nodeselector.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: httpd-container
+    image: httpd
+  nodeSelector:
+    company: thinknyx
+
+
+Case two:
+========
+
+As soon as you label the node you will get the POD in running condition (auto-healing)
+
+kubectl label nodes <nodename> company=thinknyx
+kubectl label nodes <nodename> hardware=low-spec
+
+
+Change the nodeSelector to other node and re-run.

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quotapod2
+  namespace: quotans
+spec:
+  containers:
+  - name: quotapod2
+    image: redis
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "800m"      
+      requests:
+        memory: "700Mi"
+        cpu: "400m"

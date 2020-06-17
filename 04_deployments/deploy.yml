@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myappdep
+  labels:
+    app: myapp
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: httpd-container
+        image: httpd
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp

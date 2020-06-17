@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: dstest1
+  name: dstest1
+spec:
+  selector:
+    matchLabels:
+      app: dstest1
+  template:
+    metadata:
+      labels:
+        app: dstest1
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        command:
+        - sh
+        - -c
+        - "sleep 10000"
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule

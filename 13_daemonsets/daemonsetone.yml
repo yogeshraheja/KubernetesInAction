@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: dstest
+  name: dstest
+spec:
+  selector:
+    matchLabels:
+      app: dstest
+  template:
+    metadata:
+      labels:
+        app: dstest
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        command:
+        - sh
+        - -c
+        - "sleep 10000"
