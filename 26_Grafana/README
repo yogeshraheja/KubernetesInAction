@@ -1,0 +1,18 @@
+Note: I added the toleration here to get Grafans setup only on Master Server
+=====
+
+Once the file are deployed follow below process to Add DashBoard to your Grafana:
+
+There are many prebuilt Grafana templates available for various data sources "https://grafana.com/grafana/dashboards?search=kubernetes"
+
+Step 1: Get the template ID from grafana public template.
+
+Example 8588 (I took)
+
+Step 2: Head over to grafana and select the import option from (+) create button.
+
+Step 3: Enter the dashboard ID you got it step 1 and import it
+
+Step 4: Grafana will automatically fetch the template from Grafana website. You can change the values as shown in the image below and click import.
+
+You should see the dashboard immediately.
