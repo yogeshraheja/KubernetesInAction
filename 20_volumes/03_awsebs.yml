@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voldepaws
+  labels:
+    app: voltestaws
+spec:
+  template:
+    metadata:
+      name: voldepaws-pod
+      labels:
+        app: voltestaws
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        awsElasticBlockStore:
+          volumeID: vol-02f3213f8fa674d44
+          fsType: ext4
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voltestaws

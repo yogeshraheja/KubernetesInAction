@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voldepagain
+  labels:
+    app: voltestagain
+spec:
+  template:
+    metadata:
+      name: voldepagain-pod
+      labels:
+        app: voltestagain
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        hostPath:
+          path: /data
+          type: DirectoryOrCreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voltestagain

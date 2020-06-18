@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfsdep
+  labels:
+    app: nfstest
+spec:
+  template:
+    metadata:
+      name: nfsdep-pod
+      labels:
+        app: nfstest
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        persistentVolumeClaim:
+          claimName: nfs
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfstest
+

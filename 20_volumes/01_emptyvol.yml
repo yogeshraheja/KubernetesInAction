@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voldep
+  labels:
+    app: voltest
+spec:
+  template:
+    metadata:
+      name: voldep-pod
+      labels:
+        app: voltest
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        emptyDir: {}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voltest
