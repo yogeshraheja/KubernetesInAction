@@ -1,0 +1,7 @@
+Lets take an example of MYSQL, wherein we need to define MYSQL_ROOT_PASSWORD enviroment variable during container creation else container wont start.
+
+In such cases we have to use "env" array with Spec section of containers like:
+
+env:
+  - name: key
+    value: value

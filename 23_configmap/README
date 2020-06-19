@@ -1,0 +1,25 @@
+Config map can be created useing CLI or using YAML file
+
+1.) CLI: 
+
+kubectl create configmap mysqlcred --from-literal=MYSQL_ROOT_PASSWORD=yogesh@123
+
+2.) OR using YAML
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysqlcred
+data:
+  MYSQL_ROOT_PASSWORD: yogesh@123
+
+
+
+
+kubectl create -f 01_configmapcred.yml
+
+kubectl get configmap
+
+kubectl describe configmap mysqlcred
+
+Now create the Deployment using envFrom in the spec to create enviroment variable using Configmap

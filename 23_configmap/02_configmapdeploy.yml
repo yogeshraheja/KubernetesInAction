@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configmapdb
+  labels:
+    app: dbapp
+spec:
+  template:
+    metadata:
+      name: dbapp-pod
+      labels:
+        app: dbapp
+    spec:
+      containers:
+      - name: mysql-container
+        image: mysql:8
+        envFrom:
+        - configMapRef:
+            name: mysqlcred
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbapp

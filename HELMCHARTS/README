@@ -1,0 +1,104 @@
+Helm Installation:
+==================
+
+Go to https://helm.sh/docs/intro/install/ and select the OS and download the package
+
+- wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+- tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
+- mv linux-amd64/helm /usr/local/bin/helm
+- helm version
+
+Creation of a Chart:
+====================
+
+helm create yogeshtest
+
+-rw-r--r--. 1 root root 1803 Jun 19 07:54 values.yaml
+-rw-r--r--. 1 root root 1101 Jun 19 07:54 Chart.yaml
+drwxr-xr-x. 3 root root  162 Jun 19 07:54 templates
+drwxr-xr-x. 2 root root    6 Jun 19 07:54 charts
+
+where: value.yaml is the default file for values (all default values will come here)
+where: chart.yaml is the metadata about the chart (details about charts)
+templates: is the place where we will have our k8s files (k8s object files with dynamic variables)
+charts: is a place where you can put dependent charts for this newly created chart
+
+helm lint
+
+helm package yogeshtest
+Successfully packaged chart and saved it to: /root/yogeshtest-1.0.0.tgz
+
+helm install yogeshtest-v1 yogeshtest-1.0.0.tgz
+
+helm ls
+
+helm status yogeshtest-v1
+
+helm history  yogeshtest-v1
+
+helm uninstall yogeshtest-v1
+
+================
+
+Perform Upgrade:
+================
+Install V1 version of images liek we did in the above case.
+
+Then change the image tag value in values.yaml, and chart version in Charts.yml 
+
+helm package yogeshtest
+
+helm upgrade yogeshtest-v1 yogeshtest-1.0.1.tgz
+
+helm ls
+
+helm history yogeshtest-v1
+
+=============
+
+RollBack:
+
+helm rollback yogesh-v1
+
+helm ls
+
+helm history yogeshtest-v1
+
+=======================================
+=======================================
+
+Adding HELM from REPO's
+
+helm search hub nginx
+
+Serach from CLI and then go to GUI to find the Chart Repo details
+
+helm repo add newrelic https://helm-charts.newrelic.com
+
+helm repo list
+
+helm install yogeshnginxtest newrelic/simple-nginx --version 1.1.1
+
+ITS NOT RUNNING AND SHOWING IMAGEERRORBACKPULL (image not present)
+
+lets us see how to customize this
+
+helm uninstall yogeshnginxtest
+
+helm show values newrelic/simple-nginx
+
+create a new yogeshvalue.yml file:
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+helm install yogeshnginxtest newrelic/simple-nginx -f /tmp/yogeshvalues.yml --version 1.1.1
+
+helm ls
+
+helm uninstall yogeshnginxtest
+
+helm repo remove newrelic
