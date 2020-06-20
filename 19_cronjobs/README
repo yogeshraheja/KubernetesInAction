@@ -1,0 +1,8 @@
+Cronjobs:
+=========
+
+- kubectl create -f .
+- kubectl get cronjobs
+- kubectl get jobs
+- kubectl get pods
+- kubectl describe pod <PN>

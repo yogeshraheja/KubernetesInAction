@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webdeptwo
+  labels:
+    app: webdeptwo
+spec:
+  template:
+    metadata:
+      name: webdeptwo-pod
+      labels:
+        app: webdeptwo
+    spec:
+      containers:
+      - name: webcontwo
+        image: yogeshraheja/devopsinaction:v2
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webdeptwo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webdeptwosvc
+
+spec:
+  type: ClusterIP
+  ports:
+  - targetPort: 80
+    port: 80
+  selector:
+    app: webdeptwo

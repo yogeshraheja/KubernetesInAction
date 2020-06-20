@@ -1,0 +1,32 @@
+Ingress: Is a L7 LB in K8S
+=======
+
+There are two things in INGRESS, 1.) Ingress Controller (like nginx, httpd proxy, istio, contour etc) 2.) Ingress Resources (the rules via which the traffic from Controller will reach to the services).
+
+There are only two ways in which the rules can be defined. One is using PATH BASED ROUTING and Second is using DOMAIN BASED ROUTING.
+
+1.) Lets us create two web deployment and services (clusterIP) using yogeshraheja/devopsinaction:v1 and yogeshraheja/devopsinaction:v2 with name webdepone, webdepsvcone and webdeptwo, webdepsvctwo
+
+2.) Deploy Nginx Controller 
+
+(https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/)
+
+I created a whole chunk of NGINX_DEPLOYMENT and kept it under "nginx_controller" folder
+
+PS: In case you get an error like "error: unable to recognize "09_global-configuration.yml": no matches for kind "GlobalConfiguration" in version "k8s.nginx.org/v1alpha1". Just re-run this 09_global-configuration.yml again.
+
+3.) Create rules to access deployed applications.
+
+PS: Use domain based routing and put the master server IP in the "hosts" file of local system (Windows laptop). I used ingressone.thinknyx.com and ingresstwo.thinknyx.com
+
+4.) Test the Ingress in Action
+
+kubectl get ingress
+kubectl describe ingress ingress-resource
+
+PS: Ingress controller is deployed inside ns "nginx-ingress" and other deployment/service/ingress-resource has been created in default ns and all is working.
+
+You need to find the nodeport of the ingress-controller from "nginx-ingress" NS and then amend the same with ngressone.thinknyx.com and ingresstwo.thinknyx.com
+
+
+

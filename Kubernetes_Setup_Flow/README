@@ -1,0 +1,46 @@
+- Installation and setup
+- Cluster scale out (Adding a new node)
+- Drain a node 
+
+kubectl drain nodename
+kubectl uncordon nodename
+
+Note: add one deployment with two or more replicas to show drain
+- Cordon and Uncordon a node
+
+kubectl cordon nodename
+kubectl uncordon nodename
+
+- Cluster scale in (Removing an old node)
+
+kubectl drain nodename
+kubectl delete node nodename
+kubeadm reset (on client)
+
+- Decommissioning of K8S cluster
+
+kubectl drain nodename
+kubectl delete node nodename
+kubeadm reset (on client)
+
+kubectl delete node nodename (master name)
+kubeadm reset
+Remove kubeconfig file  (rm -rf /root/.kube* & rm -rf /etc/kubernetes*)
+Remove calico network also (rm -rf /etc/cni/net.d)
+
+- Installation and setup with old version (1.16)
+
+yum remove kube* (all nodes and hash out the exclude from repos, also use --show-duplicate with yum list to see all versions)
+
+yum install kubeadm-1.16.0-0 kubelet-1.16.0-0 kubectl-1.16.0-0
+
+And then rest of the setup
+
+- Scale out a node to have 3 node cluster
+
+- Kubernetes upgrade process from 1.16 to 1.17
+
+upgrade kubeadm on controlnode first
+then update kubectl and kubelet on the controler node
+
+https://v1-17.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/

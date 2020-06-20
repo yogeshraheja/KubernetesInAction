@@ -1,0 +1,5 @@
+In this example we will create multicontainer pod. Though its not a true MicroService model where you would have multiple containers running inside a same pod, but in case you come across such challenges you can have multiple container inside a single pod as CONTAINERS is a list of array in K8S.
+
+- kubectl apply -f file.yml
+- kubectl get pods
+- kubectl describe pod <POD-name>

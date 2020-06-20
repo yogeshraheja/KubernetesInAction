@@ -7,3 +7,94 @@ Case2:
 =====
 
 Run new pod and you will see quota errors
+
+
+===============================================================
+Configure Memory and CPU Quotas for a Namespace and demonstrate the same with Sucess and Failure with POD creation:
+=============
+
+- kubectl create -f filens.yml
+- kubectl create -f filequota.yml
+- Check the status using kubectl get commands
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: quotans
+
+
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: quotademo
+  namespace: quotans
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi
+
+
+
+- Create a pod now:
+
+- kubectl create -f filepod.yml
+- kubectl get deployment, rs and pod
+- All worked fine
+- Even you can describe the quota and will check the used and remaning resources
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quotapod
+  namespace: quotans
+spec:
+  containers:
+  - name: quotapod
+    image: httpd
+    resources:
+      limits:
+        memory: "800Mi"
+        cpu: "800m" 
+      requests:
+        memory: "600Mi"
+        cpu: "400m"
+      
+
+CASE2: Attempt to create a second Pod:
+
+- kubectl create -f filepod2.yml
+- kubectl get deployment, rs and pod
+- You will quota errors:
+
+[root@master ~]# kubectl create -f filepod2.yml
+Error from server (Forbidden): error when creating "04_newpod.yml": pods "quotapod2" is forbidden: exceeded quota: quotademo, requested: requests.memory=700Mi, used: requests.memory=600Mi, limited: requests.memory=1Gi
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quotapod2
+  namespace: quotans
+spec:
+  containers:
+  - name: quotapod2
+    image: redis
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "800m"      
+      requests:
+        memory: "700Mi"
+        cpu: "400m"
+      
+
+
+
+
+
+

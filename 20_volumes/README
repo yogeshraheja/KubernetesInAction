@@ -1,0 +1,81 @@
+CASE1:  with emptyvol (the volume remain until the POD is alive)
+
+kubectl create -f file.yml
+kubectl get pods
+kubectl describe pod <p-n>
+kubectl exec -it <p-n> /bin/bash
+-> df -h
+-> you will see the mount point on volume
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voldep
+  labels:
+    app: voltest
+spec:
+  template:
+    metadata:
+      name: voldep-pod
+      labels:
+        app: voltest
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        emptyDir: {}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voltest
+
+=========================================
+
+CASE2: with hostPath (this is useful for a single node as the data will remain only on the single host)
+
+-> create the deployment
+-> go inside pod and check the volume will be there
+-> put some data in that volume (FS) from pod
+-> login inside the workernode and confirm the data will be seen there
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voldepagain
+  labels:
+    app: voltestagain
+spec:
+  template:
+    metadata:
+      name: voldepagain-pod
+      labels:
+        app: voltestagain
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        hostPath:
+          path: /data
+          type: DirectoryOrCreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voltestagain
+
+===============================

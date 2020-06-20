@@ -1,0 +1,82 @@
+PV & PVC:
+=========
+
+Setup a NFS on AWS (EFS) and mount that on all worker nodes
+
+-> Create PV
+-> Create PVC
+-> Assign PVC to your deployment
+-> Put somedata inside FS in your pod
+-> delete pod and test the data remains their
+-> Go to other worker nodes and see the NFS is mounted there and you have your data there intact
+
+NOTE: Make sure to change the NFS server details with the new one in your PV yaml file
+
+[root@k8smaster 21_PV_PVC]# ls -lrt
+total 12
+-rw-r--r--. 1 root root 203 Jun 18 07:48 01_nfspv.yml
+-rw-r--r--. 1 root root 152 Jun 18 07:49 02_nfspvc.yml
+-rw-r--r--. 1 root root 556 Jun 18 07:53 03_nfsdeploy.yml
+[root@k8smaster 21_PV_PVC]#
+
+
+[root@k8smaster 21_PV_PVC]# cat 01_nfspv.yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: fs-313b51b2.efs.us-east-1.amazonaws.com
+    path: "/"
+
+[root@k8smaster 21_PV_PVC]# cat 02_nfspvc.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+
+
+[root@k8smaster 21_PV_PVC]# cat 03_nfsdeploy.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfsdep
+  labels:
+    app: nfstest
+spec:
+  template:
+    metadata:
+      name: nfsdep-pod
+      labels:
+        app: nfstest
+    spec:
+      containers:
+      - name: ubuntucontainer
+        image: ubuntu:18.04
+        command:
+        - "sleep"
+        - "3600"
+        volumeMounts:
+        - name: ubuntu-vol
+          mountPath: /datatest
+      volumes:
+      - name: ubuntu-vol
+        persistentVolumeClaim:
+          claimName: nfs
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfstest
+
+

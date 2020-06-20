@@ -1,0 +1,8 @@
+JObs:
+=====
+
+kubectl create -f file.yml
+kubectl get jobs
+kubectl describe job <j-n>
+kubectl get pods
+kubectl delete job <j-n>

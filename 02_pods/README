@@ -1,0 +1,35 @@
+- Create the yaml
+- kubectl create -f file.yml
+- kubectl get pods
+- kubectl get pods -o wide
+- kubectl describe pod <pod-name>
+
+=================================
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: httpd-container
+    image: httpd
+
+==================
+
+You can also create one more POD with your own image like this:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: yogeshapp
+  labels:
+    app: yogeshapp
+spec:
+  containers:
+  - name: devopsinaction
+    image: yogeshraheja/devopsinaction:v1
+
+

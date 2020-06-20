@@ -1,0 +1,56 @@
+Replace vish/stress with yogeshraheja/thinknyxstress:v1
+
+
+Success Case: 
+=============
+
+There are two things in k8s. One is LIMIT (which is maximum value POD can have) other is request (the minimum value which should be available when the POD is coming UP).
+
+Here I am saying my POD should come up if I have .5 core CPU and 200Mi of Memory available. I am just setting softlimits not the hardlimits here.
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stressdemo
+spec:
+  containers:
+  - name: stressdemo
+    image: yogeshraheja/devopsinaction:v1
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "200Mi"
+
+Failure Case:
+=============
+
+Here I am saying my POD should come up if I have .5 core CPU and 10Gi of Memory available (Softlimit) and should not go beyond 1 core CPU and 100Gi of memory (which is my hardlimit of pod)
+
+This time the pod will fail as my system (worker) node is not having 10Gi memory available. This is just to demonsrated the limits and requests on PODs.
+
+Error will be like:
+===================
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  14s (x2 over 14s)  default-scheduler  0/3 nodes are available: 1 Insufficient cpu, 2 Insufficient memory.
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stressdemo2
+spec:
+  containers:
+  - name: stressdemo2
+    image: yogeshraheja/devopsinaction:v1
+    resources:
+      limits:
+        cpu: "1"
+        memory: "100Gi"
+      requests:
+        cpu: "0.5"
+        memory: "10Gi"
+

@@ -1,0 +1,5 @@
+In this case we want some initial work to be completed and then the actual container should come up. This is where we use "INITCONTAINERS". In my case I want my main container should not start until my initcntainers "sleep 30" command gets executed with success. This is true with the setup of Kubernetes also, when we create NETWORK (calico), coreDNS etc you will see INIT in the initial pod creation as they are using initcontainers.
+
+- kubectl create -f file.yml
+- kubectl get pods
+- kubectl describe pod <PN> (here you will see both main and init containers)

@@ -1,0 +1,66 @@
+- Create a simple deployment with just "ubuntu:18.04" image (you can use any other image also), and show the pods are not coming up and "/bin/bash" is the last command executed for Ubuntu image written in the dockerfile. 
+
+- Now if you want to overwrite the last command/entrypoint mentioned in the Dockerfile, In k8s you have to use "args or command" in the spec section of your pod. Like in our case we will use "sleep 3600" to replace default /bin/bash command for ubuntu.
+
+- kubectl create -f file.yaml
+- kubectl get deployments, RS and Pods
+- Now describe the pod and show its showind "sleep 3600" as command
+
+Note: I could have used ARGS here instead of Command (like you have enterpoint and cmd in dockerfile, ARGS is CMD and Command is ENTRYPOINT in k8s)
+
+EXAMPLE with COMMAND:
+=====================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commanddep
+  labels:
+    app: myapp
+spec:
+  template:
+    metadata:
+      name: commanddeppod
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: commanddeppod
+        image: ubuntu:18.04
+        command:
+          - "sleep"
+          - "3600"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+
+
+EXAMPLE with ARGS:
+==================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argdep
+  labels:
+    app: myapparg
+spec:
+  template:
+    metadata:
+      name: argdeppod
+      labels:
+        app: myapparg
+    spec:
+      containers:
+      - name: argdeppod
+        image: ubuntu:18.04
+        args:
+          - "sh"
+          - "-c"
+          - "hostname && uptime && sleep 3600"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapparg
+

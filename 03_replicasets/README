@@ -1,0 +1,12 @@
+Case1: Create with 1 Replica
+- kubectl create -f file.yml
+- kubectl get rs
+- kubectl get pods
+- kubectl describe pod <PN> & kubectl describe rs <RS-Name>
+
+Case2: Increase the Replicas to 3 and apply
+- vi file.yml and change replicas value to 3
+- kubectl apply -f file.yml
+- kubectl get rs
+- kubectl get pods
+- kubectl describe pod <PN> & kubectl describe rs <RS-Name>

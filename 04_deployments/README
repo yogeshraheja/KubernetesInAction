@@ -1,0 +1,8 @@
+Deployment operations:
+
+- kubectl create -f file.yml
+- kubectl get deployment
+- kubectl get rs
+- kubectl get pods
+- describe all of the objects
+- Demonstrate Self-Healing (kubectl delete pod <PN>

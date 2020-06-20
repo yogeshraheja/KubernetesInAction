@@ -1,0 +1,9 @@
+Prometheus Setup:
+=================
+
+- NS
+- ClusterRole
+- Config-Map
+- Deployment
+- Service
+- Access from browser

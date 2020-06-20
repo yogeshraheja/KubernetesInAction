@@ -1,0 +1,74 @@
+Rolling Upgrades:
+=================
+
+Successful Upgrade:
+===================
+
+- kubectl create -f file.yml
+- kubectl get deployment & RS & POD
+- kubectl describe pod <PN>   (Note the VERSION of the DOCKER Image)
+- kubectl get svc
+- kubectl describe svc <service-name>
+- Access the webapp from the browser
+
+Now open the yaml file and change the Image version from v1 to v2 and apply the yaml. Before applying the yaml open a new terminal and execute below commands to show the last deployment was a sucess and only one version of app till now has been deployed:
+- kubectl rollout status deployment yogeshdep
+- kubectl rollout history deployment yogeshdep
+
+- kubectl create -f file.yml
+- kubectl get deployment & RS & POD
+- kubectl describe pod <PN>   (Note the VERSION of the NEW DOCKER Image)
+- kubectl get svc
+- kubectl describe svc <service-name>
+- Access the webapp from the browser
+
+Rollback to previous version:
+=============================
+
+- kubectl rollout undo deployment yogeshdep  (this is easiest but its always better in production to change the yaml back and run kubectl apply -f file.yml to track the changes)
+
+Note: Above command will take you to the previous (last) version, in case you want to go to any other version use --to-revision with the above command.
+
+Failed Upgrade:
+===============
+
+In case you want to demonstrate the failure, you can edit the yml file with an image which doesnt exist and then apply the file, you will see no progress. Now in order to rollback use "kubectl rollout undo deployment deployment-name" which will rollout to the last version.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yogeshdep
+  labels:
+    app: thinknyxapp
+spec:
+  template:
+    metadata:
+      name: yogeshdep-pod
+      labels:
+        app: thinknyxapp
+    spec:
+      containers:
+      - name: yogeshdeppod
+        image: yogeshraheja/devopsinaction:v1
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: thinknyxapp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yogeshdepsvc
+
+spec:
+  type: NodePort
+  ports:
+  - targetPort: 80
+    port: 80
+    nodePort: 30010
+  selector:
+    app: thinknyxapp
+
+
