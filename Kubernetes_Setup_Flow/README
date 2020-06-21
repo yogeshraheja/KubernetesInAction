@@ -32,7 +32,12 @@ Remove calico network also (rm -rf /etc/cni/net.d)
 
 yum remove kube* (all nodes and hash out the exclude from repos, also use --show-duplicate with yum list to see all versions)
 
-yum install kubeadm-1.16.0-0 kubelet-1.16.0-0 kubectl-1.16.0-0
+Error Faced : --> Processing Dependency: kubernetes-cni >= 0.7.5 for package: kubelet-1.17.0-0.x86_64
+Package kubernetes-cni is obsoleted by kubelet, but obsoleting package does not provide for requirements
+
+Solution is to add --setopt=obsoletes=0 during installation
+
+yum install kubeadm-1.16.0-0 kubelet-1.16.0-0 kubectl-1.16.0-0 --setopt=obsoletes=0
 
 And then rest of the setup
 
