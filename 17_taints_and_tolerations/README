@@ -6,6 +6,18 @@
 - kubectl describe node k8sworker1  | grep -i taint
 Taints:             company=thinknyx:NoSchedule
 
+To Set a Taint:
+
+kubectl taint node <nodename>  key=value:effect     (effect can be NoSchedule, PreferNoSchedule, NoExecute)
+
+To Unset a Taint:
+
+kubectl taint node <nodename> key-
+
+OR
+
+kubectl taint node <nodename> key=value:effect-
+
 CASE1: Now create a deployment with 3 replicas and you will see the POD will not get created on this node as the POD is not having tolerations set
 
 
