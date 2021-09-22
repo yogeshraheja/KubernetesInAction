@@ -49,3 +49,33 @@ upgrade kubeadm on controlnode first
 then update kubectl and kubelet on the controler node
 
 https://v1-17.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+
+
+============
+
+Upgrade High Level Steps:
+
+Master:
+-> kubeadm pkg upgrade  (this is a heart of k8s software)
+-> Drain your master
+-> Plan your upgrade
+-> Perform upgrade
+-> Upgrade kubectl and kubelet packages
+-> Restart & Reload kubelet
+-> Uncordon your master
+
+Worker1:
+-> kubeadm pkg upgrade  (this is a heart of k8s software)
+-> Drain your worker
+-> Sync the worker with master 
+-> Upgrade kubectl and kubelet packages
+-> Restart & Reload kubelet
+-> Uncordon your master
+
+Worker2:
+-> kubeadm pkg upgrade  (this is a heart of k8s software)
+-> Drain your worker
+-> Sync the worker with master 
+-> Upgrade kubectl and kubelet packages
+-> Restart & Reload kubelet
+-> Uncordon your master
