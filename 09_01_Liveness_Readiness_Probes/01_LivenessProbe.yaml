@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: livenesstest
+  name: livenesstest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: livenesstest
+  template:
+    metadata:
+      labels:
+        app: livenesstest
+    spec:
+      containers:
+      - image: ubuntu:22.04
+        name: ubuntu
+        args:
+          - /bin/bash
+          - -c
+          - touch /tmp/livechecks; sleep 20; rm -f /tmp/livechecks; sleep 300
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/livechecks
+          initialDelaySeconds: 5
+          periodSeconds: 5

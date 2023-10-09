@@ -1,0 +1,16 @@
+### Example 1
+
+1.) Create a deployment and Pod
+
+2.) Describe pod to verify the liveness
+
+3.) Describe after few seconds and see the probe gets failed
+
+Note: Observer the restart count, k8s will automatically restart the container for you
+
+### Example 2 (both Readiness and Liveness)
+
+1.) Create a deployment and Pod
+
+2.) Describe pod to verify the liveness and readiness
+

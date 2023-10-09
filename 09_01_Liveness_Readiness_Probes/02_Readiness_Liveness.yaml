@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: livenesstestone
+  name: livenesstestone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: livenesstestone
+  template:
+    metadata:
+      labels:
+        app: livenesstestone
+    spec:
+      containers:
+      - image: registry.k8s.io/goproxy:0.1
+        name: probetest
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10   
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
