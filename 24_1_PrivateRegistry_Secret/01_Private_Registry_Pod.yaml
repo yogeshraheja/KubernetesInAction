@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: privateregtest
+  name: privateregtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: privateregtest
+  template:
+    metadata:
+      labels:
+        app: privateregtest
+    spec:
+      containers:
+      - image: yogeshraheja/vote:v1
+        name: vote
+      imagePullSecrets:
+      - name: regcred
