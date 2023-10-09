@@ -102,6 +102,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["SYS_CHROOT"]
       volumes:
       - name: elasticsearch-logging
         hostPath:
@@ -115,6 +119,8 @@ spec:
         name: elasticsearch-logging-init
         securityContext:
           privileged: true
+          capabilities:
+            add: ["SYS_CHROOT"]
 ---
 apiVersion: v1
 kind: Service
