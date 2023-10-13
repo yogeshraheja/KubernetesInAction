@@ -1,0 +1,57 @@
+1.) git clone https://github.com/k8snetworkplumbingwg/multus-cni.git && cd multus-cni
+
+2.) kubectl apply -f multus-daemonset.yml
+
+3.) kubectl get ds -A
+
+4.) kubectl get pods -A -o wide
+
+Multus DS pods will be up and running on each node of a cluster
+
+5.) Verify configuration files and binary
+
+- ls -lrt /opt/cni/bin
+
+- ls -lrt /etc/cni/net.d/00-multus.conf 
+
+6.) Now there are multiple Types of interfaces which can be created like Macvlan, ipvlan, bridge etc
+
+7.) You need to install GO first 
+
+- yum install go
+- go version
+
+8.) Now compile and put macvlan and bridge plugin under location /opt/cni/bin 
+
+#Note: This needs to be done on all nodes. You can compile it on one node and then scp to others
+
+git clone https://github.com/containernetworking/plugins.git
+cd plugins
+./build_linux.sh
+cp bin/macvlan /opt/cni/bin/
+cp bin/bridge /opt/cni/bin
+ls -lrt /opt/cni/bin
+
+9.) Now create a 01_NAD.yaml file making sure to have cniVersion checked from "/etc/cni/net.d/00-multus.conf file (0.3.1 in this case) and make sure the master set to eth0 (which is the actual interface present on your nodes
+
+10.) Now create a deployment by having a special annotation given below. Putting macvlan-conf,macvlan-conf twice means we are creating two additional interfaces
+
+      annotations:
+        k8s.v1.cni.cncf.io/networks: macvlan-conf,macvlan-conf
+
+11.) One done, verify the interface by ip addr
+
+- kubectl exec -it <Podname> -- ip addr
+
+
+#CASE2: Macvlan and Bridge interface inside a single pod 
+
+1.) Create another 03_NADBRIDGE.yaml definition file and change the TYPE and IPAM details
+
+- kubectl get network-attachment-definitions
+
+2.) Create another deployment with the annotation but put macvlan-conf,bridge-conf
+
+3.) One done, verify the interface by ip addr
+
+- kubectl exec -it <Podname> -- ip addr

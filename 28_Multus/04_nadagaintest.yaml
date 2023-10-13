@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nadtestagain
+  name: nadtestagain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nadtestagain
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: macvlan-conf,bridge-conf
+      labels:
+        app: nadtestagain
+    spec:
+      containers:
+      - name: nadtestpodagain
+        command: ["/bin/ash", "-c", "trap : TERM INT; sleep infinity & wait"]
+        image: alpine
