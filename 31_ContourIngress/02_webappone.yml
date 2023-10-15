@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webdepone
+  labels:
+    app: webdepone
+spec:
+  template:
+    metadata:
+      name: webdepone-pod
+      labels:
+        app: webdepone
+    spec:
+      containers:
+      - name: webcon
+        image: yogeshraheja/devopsinaction:v1
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webdepone
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webdeponesvc
+
+spec:
+  type: ClusterIP
+  ports:
+  - targetPort: 80
+    port: 80
+  selector:
+    app: webdepone

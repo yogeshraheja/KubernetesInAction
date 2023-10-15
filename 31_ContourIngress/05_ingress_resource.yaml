@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-resource
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec: 
+  ingressClassName: nginx # This filed has been added in the newer versions
+  rules:
+#  - host: ingressone.thinknyx.com
+  - http:
+      paths:
+      - path: /webdeponesvc
+        pathType: Prefix
+        backend:
+          service:
+            name: webdeponesvc
+            port:
+              number: 80
+#  - host: ingresstwo.thinknyx.com
+      - path: /webdeptwosvc
+        pathType: Prefix
+        backend:
+          service:
+            name: webdeptwosvc
+            port: 
+              number: 80
