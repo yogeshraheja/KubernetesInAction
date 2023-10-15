@@ -20,3 +20,44 @@
 - kubectl get networkpolicy
 
 - Repeat the above test and observer the communication is stopped between pods now
+
+# Case3 (Create egress rule for 1st Deployment and Ingress Rule for second Deployment)
+
+- kubectl apply -f 02_Egress_Sample.yaml
+
+- kubectl apply -f 03_Ingress_Sample.yaml
+
+- Now execute: kubectl exec <POD1> -- curl thinknyxtwosvc    (From POD1 we are able to communicate with POD2, even you can try it with POD2 IP)
+
+Note: This will not work as we dont have DNS port 53 allowed in Egress, find the Pod IP for second deployment and run the test and it will work
+
+- Add the DNS allowed rule as egress and reapply the default policy
+
+- kubectl apply -f 04_deny_all_withDNSallow.yaml
+
+- Now execute the test again and you will see it will work with DNS name: kubectl exec <POD1> -- curl thinknyxtwosvc    (From POD1 we are able to communicate with POD2, even you can try it with POD2 IP)
+
+# Case4 (create a new NS, create a new deployment and service inside it)
+
+- kubectl create ns thinknyxns
+- kubectl get ns thinknyxns --show-labels
+- kubectl label ns thinknyxns app=thinknyxns
+- Create third deployment "kubectl create deployment thinknyxthree --image=yogeshraheja/devopsinaction:v1 -n thinknyxns"
+- Create an associated service "kubectl expose deployment thinknyxthree --port=80 --target-port=80 --name=thinknyxthreesvc --type=ClusterIP -n thinknyxns"
+
+- Run a test from POD2 to Service3 and you will see it will fail
+
+- kubectl exec <POD2> -- curl thinknyxthreesvc.thinknyxns
+
+- Edit the Ingress policy which we hve created from the 2nd deployment and add Egress rule
+
+- kubectl apply -f 05_Ingress_Sample_with_Egress.yaml
+
+- Now by default all allow policy is applicable for new namespace and you will be able to reach to the new POD 
+
+- Execute test: kubectl exec <POD2> -- curl thinknyxthreesvc.thinknyxns
+
+# SOME BEST PRACTICES
+
+- you should create a deny all policy for a new namespace
+- create a new ingress rule to more restric your solution
