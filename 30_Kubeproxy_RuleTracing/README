@@ -1,0 +1,13 @@
+# Complete Flow for tracing network 
+
+- Create one deployment with 2 replicas
+
+- Create one service and assosicate it with the deployment
+
+- iptables -t nat (check all nat tables createfd inside a host)
+- iptables -t nat -L PREROUTING (filter PREROUNTING and see KUBE-SERVICES iptables chain)
+- iptables -t nat -L KUBE-SERVICES (Now find the service name you have created)
+- iptables -t nat -L KUBE-SVC-YOURSVC (this will list all endpoints i.e PODIP:80 --> SEP stands for Service Endpoint Chain)
+- iptables -t nat -L KUBE-SEP-#### (This will display the DNAT (destination network address translation) rule)
+
+
