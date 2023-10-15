@@ -1,0 +1,22 @@
+# Case1 (check and test all allow default policy)
+
+- Create one deployment "kubectl create deployment thinknyxone --image=yogeshraheja/devopsinaction:v1"
+- Create an associated service "kubectl expose deployment thinknyxone --port=80 --target-port=80 --name=thinknyxonesvc --type=ClusterIP"
+
+- Create one deployment "kubectl create deployment thinknyxtwo --image=yogeshraheja/devopsinaction:v1"
+- Create an associated service "kubectl expose deployment thinknyxtwo --port=80 --target-port=80 --name=thinknyxtwosvc --type=ClusterIP"
+
+- Test case:
+
+- Now execute: kubectl exec <POD1> -- curl thinknyxtwosvc    (From POD1 we are able to communicate with POD2, even you can try it with POD2 IP)
+- Now execute: kubectl exec <POD2> -- curl thinknyxonesvc    (From POD2 we are able to communicate with POD1, even you can try it with POD1 IP)
+
+
+# Case2 (Create default deny policy - I am creating it in default namespace)
+
+- Create a deny all policy (01_deny_all.yaml)
+- Display the create network policy: 
+
+- kubectl get networkpolicy
+
+- Repeat the above test and observer the communication is stopped between pods now
