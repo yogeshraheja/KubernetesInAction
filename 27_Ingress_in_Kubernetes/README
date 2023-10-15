@@ -17,8 +17,6 @@ PS: In case you get an error like "error: unable to recognize "09_global-configu
 
 3.) Create rules to access deployed applications.
 
-PS: Use domain based routing and put the master server IP in the "hosts" file of local system (Windows laptop). I used ingressone.thinknyx.com and ingresstwo.thinknyx.com
-
 4.) Test the Ingress in Action
 
 kubectl get ingress
@@ -26,7 +24,10 @@ kubectl describe ingress ingress-resource
 
 PS: Ingress controller is deployed inside ns "nginx-ingress" and other deployment/service/ingress-resource has been created in default ns and all is working.
 
-You need to find the nodeport of the ingress-controller from "nginx-ingress" NS and then amend the same with ngressone.thinknyx.com and ingresstwo.thinknyx.com
+Run the tests as:
 
+IP:<nginxnodeport>/webdeponesvc
+
+IP:<nginxnodeport>/webdeptwosvc
 
 
