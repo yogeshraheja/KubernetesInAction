@@ -1,26 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: probes-demo
+  labels:
+    app: startupdep
+  name: startupdep
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: probes-demo
+      app: startupdep
   template:
     metadata:
       labels:
-        app: probes-demo
+        app: startupdep
     spec:
       containers:
-      - name: httpd
-        image: kulbhushanmayer/tomcat:readiness_probe
+      - image: yogeshraheja/tomcat:readiness_probe
+        name: tomcat
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 20
         livenessProbe:
           tcpSocket:
             port: 8080
           initialDelaySeconds: 20
-          periodSeconds: 10
-        startupProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 10 
