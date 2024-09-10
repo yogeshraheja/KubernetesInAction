@@ -31,3 +31,15 @@ This repository is created for anyone who wants to learn K8s step by step from t
 - Prometheus
 - Grafana
 - and much more
+
+
+# You many follow me on youtube, udemy or linkedin on below links:
+
+# https://www.udemy.com/user/yogesh-raheja/
+
+# https://www.youtube.com/@thinknyxtechnologies7446
+
+# www.linkedin.com/in/yogesh-raheja
+
+# HAPPY LEARNING!!!
+

@@ -1,0 +1,83 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: app1
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: app1
+  namespace: app1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+        - name: app1
+          image: trstringeraks1.azurecr.io/basic-web-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MESSAGE
+              value: hello from app1
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: app1
+  namespace: app1
+spec:
+  selector:
+    app: app1
+  ports:
+    - port: 80
+      targetPort: 8000
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: app2
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: app2
+  namespace: app2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app2
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+        - name: app2
+          image: trstringeraks1.azurecr.io/basic-web-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MESSAGE
+              value: hello from app2
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: app2
+  namespace: app2
+spec:
+  selector:
+    app: app2
+  ports:
+    - port: 80
+      targetPort: 8000

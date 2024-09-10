@@ -1,0 +1,38 @@
+kind: HTTPProxy
+apiVersion: projectcontour.io/v1
+metadata:
+  name: app1
+  namespace: app1
+spec:
+  routes:
+    - services:
+      - name: app1
+        port: 80
+---
+kind: HTTPProxy
+apiVersion: projectcontour.io/v1
+metadata:
+  name: app2
+  namespace: app2
+spec:
+  routes:
+    - services:
+      - name: app2
+        port: 80
+---
+kind: HTTPProxy
+apiVersion: projectcontour.io/v1
+metadata:
+  name: main
+spec:
+  virtualhost:
+    fqdn: myapps
+  includes:
+    - name: app1
+      namespace: app1
+      conditions:
+        - prefix: /app1
+    - name: app2
+      namespace: app2
+      conditions:
+        - prefix: /app2
