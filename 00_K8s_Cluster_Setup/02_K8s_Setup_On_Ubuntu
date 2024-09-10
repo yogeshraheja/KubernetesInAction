@@ -1,0 +1,171 @@
+# KubernetesSetup
+
+Note: The steps are performed to create 2 node K8s cluster, the servers/instances are created on AWS (t2.medium for master and t2.medium for worker node)
+
+Note: You can create servers/instances on any public cloud, local Virtual Box VM's
+
+# Pre-reqs for Master and Worker (we are using Ubuntu 24.04, The steps will remain same for CentOS but the commands will be different)
+
+# Checking OS type and kernel levels
+
+uname -a
+
+# Checking memory details
+
+free -m or dmidecode
+
+# Checking CPU details
+nproc
+
+# Confirming swap is disbaled
+
+free -m   (also cat /etc/fstab) --> if you see anything with SWAP as FS just comment that line and run swapoff -a 
+
+# Changing hostnames (ir setting hostnames)
+
+hostnamectl set-hostname thinknyxmaster  (remember just allow two special characters in names one in "." And one is "-")
+hostnamectl set-hostname thinknyxworkerone
+
+# As we dont have global DNS to using /etc/hosts files and making sure the server are able to talk to each other
+
+ip addr (find the private ips of both server)
+vi /etc/hosts (on both server and add IP to name mapping for both server)
+Once done ping worker from master and vice versa
+
+# Open specific ports (We are opening all ports just to make things simple but would recommend to open specific ports as mentioned in the below link)
+# https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+# Also make sure to open UDP 53 for DNS
+
+Port are all open
+
+# Letting iptables see bridged traffic
+
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sudo sysctl --system
+
+# Installing CRI-O as a runtime (Kindly adjust the versions as per K8s version)
+
+# Note: I am using RPM based installation here
+# https://github.com/cri-o/packaging/blob/main/README.md#usage
+
+KUBERNETES_VERSION=v1.31
+CRIO_VERSION=v1.30
+
+# Distributions using deb packages
+
+apt-get update
+apt-get install -y software-properties-common curl
+
+# Add the CRI-O repository
+
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
+    tee /etc/apt/sources.list.d/cri-o.list
+
+# Install CRI-O
+
+apt-get update
+apt-get install -y cri-o
+
+# Create the .conf file to load the modules at bootup
+cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+# Set up required sysctl params, these persist across reboots.
+
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+sudo sysctl --system
+
+
+systemctl status crio
+systemctl start crio
+systemctl enable crio
+systemctl status crio
+
+crio --version
+
+# Installation of kubeadm, kubectl and kubelet
+
+apt-get update
+
+# apt-transport-https may be a dummy package; if so, you can skip that package
+apt-get install -y apt-transport-https ca-certificates curl gpg
+
+# If the directory `/etc/apt/keyrings` does not exist, it should be created before the curl command, read the note below.
+# sudo mkdir -p -m 755 /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+# This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+systemctl enable kubelet
+systemctl start kubelet
+systemctl status kubelet
+
+Note: The kubelet will not start unless and until we complete the bootstrapping of our cluster
+
+dpkg -l | grep -i kube*
+
+# Initializing K8S Cluster (RUN THIS ONLY ON YOUR MASTER NODE)
+# RUN THIS ONLY ON YOUR MASTER NODE
+
+kubeadm init
+
+# Once kubeadm init command gets completed successfull, observe the last section of the output which will ask you to "set kubeconfig file", "install the CNI" and "add the worker nodes using the created tokens". Below is a reference for you:
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join x.x.x.x:6443 --token gnl7u2.ibvu8iii9fjwvxxrj \
+	--discovery-token-ca-cert-hash sha256:j8ud6000038456f2eb8ecejjja061e85380a312a704uyt1f27aeb6a0aabdoooo
+  
+# Seeting up Calico (RUN THIS ONLY ON YOUR MASTER NODE)
+# Details about CNI https://kubernetes.io/docs/concepts/cluster-administration/addons/#networking-and-network-policy
+
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/calico.yaml -O
+kubectl apply -f calico.yaml
+
+kubectl get nodes
+
+# Add the worker to the master node by running Join command on your Worker nodes. Example:
+
+kubeadm join x.x.x.x:6443 --token gnl7u2.ibvu8iii9fjwvxxrj \
+        --discovery-token-ca-cert-hash sha256:j8ud6000038456f2eb8ecejjja061e85380a312a704uyt1f27aeb6a0aabdooo
+
+# Wait for few seconds and check the cluster status from your master by running:
+
+kubectl get nodes
