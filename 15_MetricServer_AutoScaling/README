@@ -11,11 +11,11 @@ Run file two and wait for every thing to come up and then create autoscaler and 
 
 Horizontal Pod Autoscaler automatically scales the number of pods in a replication controller, deployment, replica set based on observed CPU utilization.
 
-kubectl autoscale deployment webappsvc --cpu-percent=30 --min=1 --max=10
+kubectl autoscale deployment webapp --cpu-percent=30 --min=1 --max=10
 
 kubectl get hpa
 
-kubectl run -it --rm load-generator --image=busybox /bin/sh
+kubectl run -it --rm loadgenerator --image=busybox -- /bin/sh
 
 Hit enter for command prompt
 
@@ -236,5 +236,5 @@ spec:
 
 kubectl get hpa
 
-kubectl get deployment php-apache
+kubectl get deployment webapp
 
