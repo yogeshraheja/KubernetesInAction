@@ -19,7 +19,7 @@ kubectl run -it --rm loadgenerator --image=busybox -- /bin/sh
 
 Hit enter for command prompt
 
-while true; do wget -q -O- http://webapp; done
+while true; do wget -q -O- http://webappsvc; done
 
 
 ================
