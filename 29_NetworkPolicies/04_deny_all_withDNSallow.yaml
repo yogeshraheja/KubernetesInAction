@@ -9,7 +9,7 @@ spec:
   - Egress
   - Ingress
   egress:
-  - to:
+  - 
     ports:
       - port: 53
         protocol: TCP
