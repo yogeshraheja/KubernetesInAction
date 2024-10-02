@@ -12,8 +12,8 @@
 # Now trouble shooting starts
 
 - kubectl get pods --show-labels
-- kubectl get sec --show-labels
-- kubectl describe sec <yourname>svc      ---> You will see the selector is different than POD labels
+- kubectl get svc --show-labels
+- kubectl describe svc <yourname>svc      ---> You will see the selector is different than POD labels
 
 # To fix the same either change the selector or put a new label for your pod.
 
