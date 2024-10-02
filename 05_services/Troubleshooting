@@ -1,0 +1,22 @@
+# Create a namespace <yourname>ns and create one pod named <yourname>pod inside your newly created ns
+
+- kubectl create ns
+- kubectl run
+
+# Now create a service of type nodeport <yourname>svc inside your newly created ns
+
+- kubectl create svc nodeport yournamesvc --tcp=80:80
+
+# Now find the nodeport details and try to access your application from the browser. You will see it won't work.
+
+# Now trouble shooting starts
+
+- kubectl get pods --show-labels
+- kubectl get sec --show-labels
+- kubectl describe sec <yourname>svc      ---> You will see the selector is different than POD labels
+
+# To fix the same either change the selector or put a new label for your pod.
+
+- kubectl label pod <yourname>pod app=yournamesvc
+
+# Switch back to the browser and see if that works :)
