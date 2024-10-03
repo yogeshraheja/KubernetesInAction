@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: yogeshstsvol
+  name: yogeshstsvol
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yogeshstsvol
+  template:
+    metadata:
+      labels:
+        app: yogeshstsvol
+    spec:
+      containers:
+      - image: ubuntu:latest
+        name: ubuntu
+        command:
+          - "sleep"
+          - "3600"
+        volumeMounts:
+          - name: testvol
+            mountPath: /datatest
+  volumeClaimTemplates:
+    - metadata: 
+        name: testvol
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "gp2"
+        resources:
+          requests:
+            storage: 1Gi

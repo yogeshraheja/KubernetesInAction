@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yogeshvolone
+  name: yogeshvolone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yogeshvolone
+  template:
+    metadata:
+      labels:
+        app: yogeshvolone
+    spec:
+      containers:
+      - image: ubuntu:latest
+        name: ubuntu
+        command:
+          - "sleep"
+          - "3600"
+        volumeMounts:
+          - name: demovol
+            mountPath: /datatest
+      volumes:
+        - name: demovol
+          persistentVolumeClaim:
+            claimName: ebsvoltest
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ebsvoltest
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: gp2
+
