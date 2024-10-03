@@ -1,0 +1,42 @@
+#### Persistent Volumes help in keep the data safe and secure beyong the life of PODs. In below example we will be using AWS EBS as Storage solution for AWS EKS Cluster with `kubernetes.io/aws-ebs` provisioner to dynmically provision the EBS Volume. Follow below steps to enable & use EBS as Storage Solution for EBS
+##### `NOTE: For below example we are assuming the EKS cluster is up & running.`
+## STEP 1
+### Adding `Identity providers` in AWS
+1. Copy the `OpenID Connect provider URL` from EKS Cluster Overview tab
+2. Go to [IAM IDENTITY PROVIDERs](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-2#/identity_providers)
+3. Click `Add Proider`
+    - Select the `OpenID Connect`
+    - Paste the URL copied in point 1 in `Provider URL` as value
+    - Enter `sts.amazonaws.com` as Audience
+    - Click `Add provider`
+## STEP 2
+### Creating IAM ROLE for Kubernetes Service Account `ebs-csi-controller-sa`, which will allow the provisioner to create EBS volumes.
+1. Go to [CREATE NEW IAM ROLE](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-2#/roles/create)
+2. Select `Web identity` as `Trusted entity type`
+3. Select `OPEN ID URL` from `Identity provider` drop down as `Web identity` & Select `Audience` as `sts.amazonaws.com`
+4. Click `Next`
+5. Search & Select `AmazonEBSCSIDriverPolicy` as `Permissions policies`
+6. Click `Next`
+7. Enter `AmazonEKS_EBS_CSI_DriverRole` as `Role name`
+8. Click `Create role`
+## STEP 3
+### Adding `Amazon EBS CSI Driver` Add-on in EKS Cluster
+1. Go to EKS Cluster `Add-ons` Tab
+2. Click `Get more add-ons`
+3. Search & Select `Amazon EBS CSI Driver` in `Amazon EKS add-ons`
+4. Click `Next`
+5. Select `Latest Version` from `Version` dropdown
+6. Search & Select `AmazonEKS_EBS_CSI_DriverRole` from `Select IAM role` dropdown
+7. Click `Next` & then Click `Create`
+8. This will add the resources for `EBS CSI Driver` in EKS Cluster
+## STEP 4
+### Checking thee Status of `EBS CSI Driver` pods in EKS Cluster
+### RUN: `$ kubectl get pods -A | grep -i ebs`
+##### If, status of all pods is comming as shown below that means EBS CSI Driver Addon is successfully installed in EKS Cluster
+```
+kube-system        ebs-csi-controller-7bccdddf75-h7fbt   6/6     Running   0          3h7m
+kube-system        ebs-csi-controller-7bccdddf75-zxnqr   6/6     Running   0          3h7m
+kube-system        ebs-csi-node-68fgn                    3/3     Running   0          3h7m
+kube-system        ebs-csi-node-8bn29                    3/3     Running   0          3h7m
+kube-system        ebs-csi-node-hzrrt                    3/3     Running   0          3h7m
+```
