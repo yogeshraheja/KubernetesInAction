@@ -1,0 +1,56 @@
+## Lab:
+=======
+
+Create a namespace <yourname>ns and create a secret inside your namespace
+
+Note: - If you are using imperative approach you need to convert your string into base64 encoded value
+      - If you are using declarative (YAML) approach, k8s will convert your value into base64 encoded string
+
+- echo "yourpassword OR string" > base64
+
+- kubectl create secret generic mysecret -n <yourname>ns --from-literal=POSTGRES_PASSWORD="Paste your encoded value here"
+
+# Note: Change the password as per your wish
+
+- kubectl get secret -n <yourname>ns
+
+Create a deployment file (yaml) and add the section "envFrom" to refer to your created CM.
+
+- kubectl create deployment yournamedep --image=postgres:latest -n <yourname>ns --dry-run=client -o yaml > yournamedep.yaml
+
+- Once done open yournamedep.yaml file and add the envFrom section - reference is below:
+
+[root@bastion ~]# cat secrettest.yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: secrettest
+  name: secrettest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secrettest
+  template:
+    metadata:
+      labels:
+        app: secrettest
+    spec:
+      containers:
+      - image: postgres:latest
+        name: postgres
+        envFrom:
+          - secretRef:
+              name: mysecret
+
+Finally check the pod status and confirm the pod is taking the secret by using
+
+- kubectl get pods -n <yourname>ns
+
+- kubectl describe pod <podname> -n <yourname>ns
+
+Once verified you can remove the deployment and secret
+
+- kubectl delete -f <youryamlfile>
+- kubectl delete secret <secret-name>
