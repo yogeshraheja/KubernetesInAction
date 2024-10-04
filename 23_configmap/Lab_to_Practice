@@ -1,0 +1,53 @@
+## Lab:
+=======
+
+Create a namespace <yourname>ns and create a configmap inside your namespace
+
+- kubectl create cm yournamecm -n <yourname>ns --from-literal=POSTGRES_PASSWORD=yogesh@123
+
+# Note: Change the password as per your wish
+
+- kubectl get cm -n <yourname>ns
+
+Create a deployment file (yaml) and add the section "envFrom" to refer to your created CM.
+
+- kubectl create deployment yournamedep --image=postgres:latest -n <yourname>ns --dry-run=client -o yaml > yournamedep.yaml
+
+- Once done open yournamedep.yaml file and add the envFrom section - reference is below:
+
+[root@bastion ~]# cat cmtest.yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cmtest
+  name: cmtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cmtest
+  template:
+    metadata:
+      labels:
+        app: cmtest
+    spec:
+      containers:
+      - image: postgres:latest
+        name: postgres
+        envFrom:
+          - configMapRef:
+              name: mycm
+
+Finally check the pod status and confirm the pod is taking the configmap by using
+
+- kubectl get pods -n <yourname>ns
+
+- kubectl describe pod <podname> -n <yourname>ns
+
+Once verified you can remove the deployment and configmaps
+
+- kubectl delete -f <youryamlfile>
+- kubectl delete cm <cm-name>
+
+
