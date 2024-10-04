@@ -3,12 +3,12 @@
 
 Create a namespace <yourname>ns and create a secret inside your namespace
 
-Note: - If you are using imperative approach you need to convert your string into base64 encoded value
-      - If you are using declarative (YAML) approach, k8s will convert your value into base64 encoded string
+Note: - If you are using imperative approach k8s will convert your value into base64 encoded string
+      - If you are using declarative (YAML) approach, you need to convert your string into base64 encoded value
 
-- echo "yourpassword OR string" > base64
+- echo -n "yourpassword OR string" > base64
 
-- kubectl create secret generic mysecret -n <yourname>ns --from-literal=POSTGRES_PASSWORD="Paste your encoded value here"
+- kubectl create secret generic mysecret -n <yourname>ns --from-literal=POSTGRES_PASSWORD="yogesh@123"
 
 # Note: Change the password as per your wish
 
