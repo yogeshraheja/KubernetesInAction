@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ujjwal-initc-ds
+  labels:
+    company: ericsson
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     company: ericsson
+  template:
+    metadata:
+      name: ujjwal-initc-ds
+      labels:
+        company: ericsson
+    spec:
+      containers:
+      - name: ujjwalinit-ds
+        image: yogeshraheja/devopsinaction:v1
+      initContainers:
+      - name: ujjwal1
+        image: busybox:latest
+        command:
+          - "/bin/touch"
+          - "/tmp/inittest"
+        resources:
+          requests:
+            memory: "50Mi"
+      - name: ujjwal2
+        image: busybox:latest
+        command:
+          - "sleep"
+          - "30"
+        resources:
+          requests:
+            memory: "50Mi"
