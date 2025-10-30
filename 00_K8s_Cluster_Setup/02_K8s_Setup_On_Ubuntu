@@ -99,6 +99,16 @@ systemctl status crio
 
 crio --version
 
+# Note: From 1.34 K8s version, changes have been done in the image names we write for our applications.
+# Either provide <registry-name>/<repository-name>/<image-name>:<tag> like docker.io/library/nginx:latest
+# OR add short_name_mode = "disabled" inside /etc/crio/crio.conf.d/10-crio.conf  under [crio.image]
+```
+root@master:~# cat /etc/crio/crio.conf.d/10-crio.conf 
+[crio.image]
+signature_policy = "/etc/crio/policy.json"
+short_name_mode = "disabled"
+```
+
 # Installation of kubeadm, kubectl and kubelet
 
 apt-get update
